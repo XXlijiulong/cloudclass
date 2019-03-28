@@ -25,20 +25,19 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public ServerResponse register(String name, String password, String email) {
+    public ServerResponse register(User user) {
         //唯一性检查
-        ServerResponse response = checkValid(name,User.NAME);
+        ServerResponse response = checkValid(user.getName(),User.NAME);
         if (!response.isSuccess()){
             return response;
         }
-        response = checkValid(email,User.EMAIL);
+        response = checkValid(user.getEmail(),User.EMAIL);
         if (!response.isSuccess()){
             return response;
         }
         //创建用户对象
-        User user = User.createUser(name,email);
         user.setId(Tool.uuid());
-        user.setPassword(BCrypt.hashpw(password,BCrypt.gensalt()));
+        user.setPassword(BCrypt.hashpw(user.getPassword(),BCrypt.gensalt()));
         user.setIdentity(User.STUDENT_IDENTITY);
         //写入数据库
         userMapper.register(user);

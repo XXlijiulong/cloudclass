@@ -6,6 +6,7 @@ import edu.qit.cloudclass.tool.ServerResponse;
 import edu.qit.cloudclass.tool.Tool;
 import edu.qit.cloudclass.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
@@ -21,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class UserController {
 
     private static final String SESSION_KEY = "correct_user";
@@ -29,19 +31,16 @@ public class UserController {
     private final UserService userServer;
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public ServerResponse register(@RequestBody(required = false) Map<String,String> params){
+    public ServerResponse register(@RequestBody(required = false) User user){
         //接收并检查参数
-        if (params == null){
+        if (user == null){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
-        String name = params.get("name");
-        String password = params.get("password");
-        String email = params.get("email");
-        if (!Tool.checkParamsNotNull(name,password,email)) {
+        if (!Tool.checkParamsNotNull(user.getName(),user.getPassword(),user.getEmail())) {
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
         //调用service方法注册信息
-        return userServer.register(name,password,email);
+        return userServer.register(user);
     }
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
