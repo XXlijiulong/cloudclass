@@ -13,7 +13,7 @@ public interface UserService {
      * @author 董悦
      * 2019-03-19
      */
-    ServerResponse register(String name,String password,String email);
+    ServerResponse register(User user);
 
     /**
      * 用户登录

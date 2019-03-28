@@ -9,7 +9,7 @@
 
     <insert id="register">
         insert into user(<include refid="base_column_list"/>)
-        values (#{user.id},#{user.name},#{user.password},#{user.createTime},#{user.identity},#{user.email},#{user.taken});
+        values (#{user.id},#{user.name},#{user.password},now(),#{user.identity},#{user.email},#{user.taken});
     </insert>
     <update id="registerAutoLogin">
         update user
